@@ -48,7 +48,7 @@ client.connect(err => {
     // sell post
     app.post('/addSell', (req, res) => {
         const newSell = req.body;
-
+        
         sellCollection.insertOne(newSell)
             .then(result => {
                 res.send(result.insertedCount > 0)
