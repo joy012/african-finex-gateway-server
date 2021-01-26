@@ -31,13 +31,8 @@ client.connect(err => {
     })
 // buy post
     app.post('/addBuy', (req, res) => {
-        const country = req.body.country;
-        const coinQuantity = req.body.coinQuantity;
-        const wallet = req.body.wallet;
-        const IBAN = req.body.IBAN;
-        const swapId = req.body.swapId;
-
-        buyCollection.insertOne({ country, coinQuantity, wallet, IBAN, swapId })
+        const newBuy = req.body;
+        buyCollection.insertOne(newBuy)
             .then(result => {
                 res.send(result.insertedCount > 0)
             })
@@ -52,13 +47,9 @@ client.connect(err => {
     })
     // sell post
     app.post('/addSell', (req, res) => {
-        const country = req.body.country;
-        const coinQuantity = req.body.coinQuantity;
-        const wallet = req.body.wallet;
-        const IBAN = req.body.IBAN;
-        const TXid = req.body.TXid;
+        const newSell = req.body;
 
-        sellCollection.insertOne({ country, coinQuantity, wallet, IBAN, TXid })
+        sellCollection.insertOne(newSell)
             .then(result => {
                 res.send(result.insertedCount > 0)
             })
