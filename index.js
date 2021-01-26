@@ -23,6 +23,12 @@ client.connect(err => {
     const buyCollection = client.db("african-finex-gateway").collection("buy");
     const sellCollection = client.db("african-finex-gateway").collection("sell");
 
+    app.get('/buy', (req, res) => {
+        buyCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
 // buy post
     app.post('/addBuy', (req, res) => {
         const country = req.body.country;
@@ -37,6 +43,13 @@ client.connect(err => {
             })
     })
 
+
+    app.get('/sell', (req, res) => {
+        sellCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
+    })
     // sell post
     app.post('/addSell', (req, res) => {
         const country = req.body.country;
