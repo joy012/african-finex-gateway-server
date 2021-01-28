@@ -23,12 +23,35 @@ client.connect(err => {
     const buyCollection = client.db("african-finex-gateway").collection("buy");
     const sellCollection = client.db("african-finex-gateway").collection("sell");
 
-    app.get('/buy', (req, res) => {
-        buyCollection.find({})
-            .toArray((err, documents) => {
-                res.send(documents);
-            })
+  
+    // get buy
+    app.get('/sell', (req, res) => {
+        const bearer = req.headers.authorization;
+        if (bearer && bearer.startsWith('Bearer ')) {
+            const idToken = bearer.split(' ')[1];
+            admin.auth().verifyIdToken(idToken)
+                .then(function (decodedToken) {
+                    const tokenEmail = decodedToken.email;
+                    const queryEmail = req.query.email;
+                    if (tokenEmail === queryEmail) {
+                        buyCollection.find({email: queryEmail})
+                            .toArray( (err,documents) => {
+                                res.status(200).send(documents);
+                                
+                            })
+                    }
+                    else{
+                        res.status(401).send('Un-Authorized Access!!')
+                    }
+                }).catch(function (error) {
+                    res.status(401).send('Un-Authorized Access!!')
+                });
+        }
+        else{
+            res.status(401).send('Un-Authorized Access!!')
+        }
     })
+
 // buy post
     app.post('/addBuy', (req, res) => {
         const newBuy = req.body;
@@ -39,12 +62,36 @@ client.connect(err => {
     })
 
 
+
+    // sell get
     app.get('/sell', (req, res) => {
-        sellCollection.find({})
-            .toArray((err, documents) => {
-                res.send(documents);
-            })
+        const bearer = req.headers.authorization;
+        if (bearer && bearer.startsWith('Bearer ')) {
+            const idToken = bearer.split(' ')[1];
+            admin.auth().verifyIdToken(idToken)
+                .then(function (decodedToken) {
+                    const tokenEmail = decodedToken.email;
+                    const queryEmail = req.query.email;
+                    if (tokenEmail === queryEmail) {
+                        sellCollection.find({email: queryEmail})
+                            .toArray( (err,documents) => {
+                                res.status(200).send(documents);
+                                
+                            })
+                    }
+                    else{
+                        res.status(401).send('Un-Authorized Access!!')
+                    }
+                }).catch(function (error) {
+                    res.status(401).send('Un-Authorized Access!!')
+                });
+        }
+        else{
+            res.status(401).send('Un-Authorized Access!!')
+        }
     })
+
+
     // sell post
     app.post('/addSell', (req, res) => {
         const newSell = req.body;
