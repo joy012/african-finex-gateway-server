@@ -25,7 +25,7 @@ client.connect(err => {
 
   
     // get buy
-    app.get('/sell', (req, res) => {
+    app.get('/buy', (req, res) => {
         const bearer = req.headers.authorization;
         if (bearer && bearer.startsWith('Bearer ')) {
             const idToken = bearer.split(' ')[1];
