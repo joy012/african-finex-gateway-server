@@ -5,9 +5,9 @@ const MongoClient = require('mongodb').MongoClient;
 
 
 
-
 const uri = `mongodb+srv://${process.env.DB_USER}:${precess.env.DB_PASS}@cluster0.ukskk.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(express.static('services'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const port = 3283;
+const port = 3287;
 
 
 client.connect(err => {
