@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-const ObjectId = require('mongodb').ObjectId;
-var admin = require('firebase-admin');
+const admin = require('firebase-admin');
 const serviceAccount = require("./config/african-finex-gateway-firebase-adminsdk-m3aag-9a106308e1.json");
 require('dotenv').config()
 
