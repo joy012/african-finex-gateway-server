@@ -3,10 +3,16 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+var admin = require('firebase-admin');
+const serviceAccount = require("./config/african-finex-gateway-firebase-adminsdk-m3aag-9a106308e1.json");
+require('dotenv').config()
 
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: `${process.env.SITE_NAME}`
+});
 
-
-const uri = `mongodb+srv://finexGateway:50114400JoY@cluster0.ukskk.mongodb.net/african-finex-gateway?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${precess.env.DB_PASS}@cluster0.ukskk.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const app = express();
@@ -23,7 +29,7 @@ client.connect(err => {
     const buyCollection = client.db("african-finex-gateway").collection("buy");
     const sellCollection = client.db("african-finex-gateway").collection("sell");
 
-  
+
     // get buy
     app.get('/buy', (req, res) => {
         const bearer = req.headers.authorization;
@@ -34,25 +40,25 @@ client.connect(err => {
                     const tokenEmail = decodedToken.email;
                     const queryEmail = req.query.email;
                     if (tokenEmail === queryEmail) {
-                        buyCollection.find({email: queryEmail})
-                            .toArray( (err,documents) => {
+                        buyCollection.find({ email: queryEmail })
+                            .toArray((err, documents) => {
                                 res.status(200).send(documents);
-                                
+
                             })
                     }
-                    else{
+                    else {
                         res.status(401).send('Un-Authorized Access!!')
                     }
                 }).catch(function (error) {
                     res.status(401).send('Un-Authorized Access!!')
                 });
         }
-        else{
+        else {
             res.status(401).send('Un-Authorized Access!!')
         }
     })
 
-// buy post
+    // post buy
     app.post('/addBuy', (req, res) => {
         const newBuy = req.body;
         buyCollection.insertOne(newBuy)
@@ -63,7 +69,7 @@ client.connect(err => {
 
 
 
-    // sell get
+    // get sell
     app.get('/sell', (req, res) => {
         const bearer = req.headers.authorization;
         if (bearer && bearer.startsWith('Bearer ')) {
@@ -73,29 +79,30 @@ client.connect(err => {
                     const tokenEmail = decodedToken.email;
                     const queryEmail = req.query.email;
                     if (tokenEmail === queryEmail) {
-                        sellCollection.find({email: queryEmail})
-                            .toArray( (err,documents) => {
+                        sellCollection.find({ email: queryEmail })
+                            .toArray((err, documents) => {
+                                console.log(documents)
                                 res.status(200).send(documents);
-                                
+
                             })
                     }
-                    else{
+                    else {
                         res.status(401).send('Un-Authorized Access!!')
                     }
                 }).catch(function (error) {
                     res.status(401).send('Un-Authorized Access!!')
                 });
         }
-        else{
+        else {
             res.status(401).send('Un-Authorized Access!!')
         }
     })
 
 
-    // sell post
+    // post sell
     app.post('/addSell', (req, res) => {
         const newSell = req.body;
-        
+
         sellCollection.insertOne(newSell)
             .then(result => {
                 res.send(result.insertedCount > 0)
