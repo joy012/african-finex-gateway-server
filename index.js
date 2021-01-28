@@ -49,7 +49,7 @@ client.connect(err => {
         const queryEmail = req.query.email;
         sellCollection.find({ email: queryEmail })
             .toArray((err, documents) => {
-                resz.send(documents);
+                res.send(documents);
             })
     })
 
