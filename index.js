@@ -26,8 +26,7 @@ client.connect(err => {
 
     // get buy
     app.get('/buy', (req, res) => {
-        const queryEmail = req.query.email;
-        buyCollection.find({ email: queryEmail })
+        buyCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
             })
@@ -46,8 +45,7 @@ client.connect(err => {
 
     // get sell
     app.get('/sell', (req, res) => {
-        const queryEmail = req.query.email;
-        sellCollection.find({ email: queryEmail })
+        sellCollection.find({})
             .toArray((err, documents) => {
                 res.send(documents);
             })
